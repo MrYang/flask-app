@@ -1,7 +1,9 @@
 flask
-requests
 #export PATH=$PATH:/usr/local/mysql/bin
 mysql-python
+gunicorn
+
+requests
 sqlalchemy
 Flask-SQLAlchemy
 Flask-Login

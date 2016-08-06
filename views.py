@@ -19,11 +19,13 @@ app.config.from_object('config')
 
 @app.before_request
 def before_request():
-    app.logger.info('before request started')
+    #app.logger.info('before request started')
+    pass
 
 @app.teardown_request
 def teardown_request(exception):
-    app.logger.info('teardown request')
+    #app.logger.info('teardown request')
+    pass
 
 def login_required(func):
     @wraps(func)
