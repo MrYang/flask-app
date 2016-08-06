@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from functools import wraps
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify
 import MySQLdb
 
 config = {
@@ -107,6 +107,12 @@ def user_show(user_id):
     user = {'id': id, 'username': username, 'password': password, 'create_date': create_date}
 
     return render_template('user-show.html', user=user)
+
+@app.route('/json')
+def json_show():
+    user = {'id': 1, 'username': u'中文名字', 'pasword': '123456'}
+    #return jsonify(user=user)
+    return jsonify(user)
 
 @app.route('/user/delete/<user_id>')
 def user_delete(user_id):
