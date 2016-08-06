@@ -1,0 +1,7 @@
+flask
+requests
+#export PATH=$PATH:/usr/local/mysql/bin
+mysql-python
+sqlalchemy
+Flask-SQLAlchemy
+Flask-Login
