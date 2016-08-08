@@ -37,9 +37,9 @@ def login_required(func):
     return decorated_function
 
 @app.errorhandler(401)
-def page_forbid(error):
+def page_forbidden(error):
     app.logger.info(u'无权限')
-    return render_template('401.html'), 401
+    return redirect('/login')
 
 @app.route('/')
 @app.route('/login', methods=['GET'])
@@ -85,10 +85,12 @@ def user_list():
     return render_template('user-list.html', users=users)
 
 @app.route('/user/new', methods=['GET'])
+@login_required
 def user_new():
     return render_template('user-new.html')
 
 @app.route('/user/create', methods=['POST'])
+@login_required
 def user_create():
     username = request.form['username']
     password = request.form['password']
@@ -97,6 +99,7 @@ def user_create():
     return redirect('/user/list')
 
 @app.route('/user/<user_id>')
+@login_required
 def user_show(user_id):
     cursor.execute('select * from t_user where id=%s', (user_id,))
     row = cursor.fetchone()
@@ -115,6 +118,7 @@ def json_show():
     return jsonify(user)
 
 @app.route('/user/delete/<user_id>')
+@login_required
 def user_delete(user_id):
     cursor.execute('delete from t_user where id=%s', (user_id))
     flash(u'删除成功')
