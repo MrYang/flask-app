@@ -8,7 +8,7 @@ config = {
     'port': 3306,
     'user': 'root',
     'passwd': '123456',
-    'db': 'citest',
+    'db': 'test',
     'charset': 'utf8'
 }
 db = MySQLdb.connect(**config)
