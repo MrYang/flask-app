@@ -1,3 +1,5 @@
+use test;
+
 CREATE TABLE `t_user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(50) DEFAULT NULL,
@@ -5,3 +7,5 @@ CREATE TABLE `t_user` (
   `create_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+insert into `t_user`(username,password,create_date)values('admin','admin',now());
