@@ -1,2 +1,4 @@
 DEBUG = True
 SECRET_KEY = 'A0Zr98j/3yX'
+SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@localhost:3306/test?charset=utf8'
+SQLALCHEMY_TRACK_MODIFICATIONS = True

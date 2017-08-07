@@ -2,6 +2,8 @@
 from functools import wraps
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify
 import MySQLdb
+import json
+from flask_sqlalchemy import SQLAlchemy
 
 config = {
     'host': '127.0.0.1',
@@ -16,6 +18,19 @@ cursor = db.cursor()
 
 app = Flask(__name__)
 app.config.from_object('config')
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    __tablename__ = 't_user'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, default='', nullable=False)
+    password = db.Column(db.String, nullable=False)
+    create_date = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return "<User(id='%s', username='%s', password='%s', create_date='%s')>" % (
+                                self.id, self.username, self.password, self.create_date)
+
 
 @app.before_request
 def before_request():
@@ -50,10 +65,10 @@ def login():
 def login_post():
     username = request.form['username']
     password = request.form['password']
-    count = cursor.execute('select * from t_user where username=%s and password=%s', (username, password))
+    count = User.query.filter_by(username = username).filter_by(password = password).count()
     if count == 1:
         flash(u'登录成功')
-        session['username'] = cursor.fetchone()[1]
+        session['username'] = username
         return redirect('/user/list')
 
     error_tip = u'用户名或密码错误'
@@ -67,20 +82,7 @@ def logout():
 @app.route('/user/list')
 @login_required
 def user_list():
-    cursor.execute('select * from t_user limit 10')
-    users = [dict(id=row[0], username=row[1], password=row[2], create_date=row[3]) for row in cursor.fetchall()]
-
-    '''
-    results = cursor.fetchall()
-    users = []
-    for row in results:
-        id = row[0]
-        username = row[1]
-        password = row[2]
-        create_date = row[3]
-        user = {'id': id, 'username': username, 'password': password, 'create_date': create_date}
-        users.append(user)
-    '''
+    users = User.query.limit(10).all()
 
     return render_template('user-list.html', users=users)
 
@@ -101,13 +103,7 @@ def user_create():
 @app.route('/user/<user_id>')
 @login_required
 def user_show(user_id):
-    cursor.execute('select * from t_user where id=%s', (user_id,))
-    row = cursor.fetchone()
-    id = row[0]
-    username = row[1]
-    password = row[2]
-    create_date = row[3]
-    user = {'id': id, 'username': username, 'password': password, 'create_date': create_date}
+    user = User.query.filter_by(id = user_id).first()
 
     return render_template('user-show.html', user=user)
 
